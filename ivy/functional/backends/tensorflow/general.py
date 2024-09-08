@@ -83,8 +83,8 @@ def set_item(
         if query is None and not tf.experimental.numpy.allclose(tf.shape(x), tf.shape(val)):
             if tf.reduce_prod(tf.shape(val)) == 1:
                 return tf.fill(tf.shape(x), val)
-            return x #val
-        if isinstance(query, slice):
+            return x
+        if not isinstance(query, (list, tuple)):
             query = (query,)
 
         x_shape = tf.shape(x)
@@ -96,7 +96,6 @@ def set_item(
         query = list(query)
         if any([q == Ellipsis for q in query if not isinstance(q, (tf.Tensor, tf.Variable))]):
             ellipsis_idx = query.index(Ellipsis)
-            print('ellipsis_idx', ellipsis_idx)
             new_query = []
             for i in range(ellipsis_idx):
                 new_query.append(query[i])
