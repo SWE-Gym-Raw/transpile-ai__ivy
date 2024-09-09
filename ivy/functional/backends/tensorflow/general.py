@@ -248,7 +248,7 @@ def set_item(
 
         if len(new_val_shape) > 0:
             val = tf.reshape(val, new_val_shape)
-        if tf.rank(val) == 0:
+        if val._rank() == 0:
             val = tf.expand_dims(val, 0)
 
         # reshape indices to match the shape of val
@@ -258,7 +258,7 @@ def set_item(
         updated_x = tf.tensor_scatter_nd_update(x, indices, val)
         return updated_x
     else:
-        raise Exception("not implemented yet for non-tuple query")
+        raise Exception("not implemented yet for Tensor query")
 
 
 def to_numpy(x: Union[tf.Tensor, tf.Variable], /, *, copy: bool = True) -> np.ndarray:

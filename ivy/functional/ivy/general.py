@@ -2879,39 +2879,7 @@ def set_item(
     ivy.array([[ 0, -1, 20],
            [10, 10, 10]])
     """
-    # TODO: we may be able to remove this logic by instead tracing _parse_query
-    # as a node in the graph??
-    if isinstance(query, (list, tuple)) and any(
-        [q is Ellipsis or (isinstance(q, slice) and q.stop is None) for q in query]
-    ):
-        # use numpy for item setting when an ellipsis or unbounded slice is present,
-        # as they would otherwise cause static dim sizes to be traced into the graph
-        # NOTE: this does however cause tf.function to be incompatible
-        x_stop_gradient = ivy.stop_gradient(x, preserve_type=False)
-        np_array = x_stop_gradient.numpy()
-        val_stop_gradient = ivy.stop_gradient(val, preserve_type=False)
-        np_array[query] = np.asarray(val_stop_gradient)
-        return ivy.array(np_array)
-
-    if copy:
-        x = ivy.copy_array(x)
-    if not ivy.is_array(val):
-        val = ivy.array(val)
-    if 0 in x.shape or 0 in val.shape:
-        return x
-    if ivy.is_array(query) and ivy.is_bool_dtype(query):
-        if not len(query.shape):
-            query = ivy.tile(query, (x.shape[0],))
-        indices = ivy.nonzero(query, as_tuple=False)
-    else:
-        indices, target_shape, _ = _parse_query(
-            query, ivy.shape(x, as_array=True), scatter=True
-        )
-        if indices is None:
-            return x
-    val = val.astype(x.dtype)
-    ret = ivy.scatter_nd(indices, val, reduction="replace", out=x)
-    return ret
+    return current_backend(x).set_item(x, query, val, copy=copy)
 
 
 set_item.mixed_backend_wrappers = {
