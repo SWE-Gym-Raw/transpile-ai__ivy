@@ -77,6 +77,20 @@ RUN python3 gpu_framework_directory.py $fw && \
     jq -r 'to_entries[] | select(.value != [""]) | .key as $dir | .value[] | @sh "/opt/fw/\($dir) \(.)"' requirement_mappings_gpu.json | \
     xargs -I {} sh -c 'pip install --no-cache-dir --target $1 $2 --extra-index-url https://download.pytorch.org/whl/cu124' sh {}
 
+# Remove numpy from requirements.txt in one go
+RUN sed -i '/numpy/d' requirements.txt && \
+    # Copy optional_gpu.txt to a temporary file for editing
+    cp ./optional_gpu.txt tmp.txt && \
+    # Use jq to extract entries from requirement_mappings_gpu.json,
+    # filter out jaxlib and other entries, and remove them from tmp.txt in a single pass
+    jq -r 'to_entries[] | select(.value | length > 0) | .key' requirement_mappings_gpu.json | \
+    sort -u | xargs -I {} sed -i '/{}/d' tmp.txt && \
+    # Combine both files (requirements.txt and tmp.txt) and install once with pip
+    cat tmp.txt >> requirements.txt && \
+    pip install --no-cache-dir -r requirements.txt && \
+    # Clean up temporary files to reduce image size
+    rm -rf tmp.txt
+
 # Remove unnecessary files
 RUN rm -rf /var/lib/apt/lists/*
 
