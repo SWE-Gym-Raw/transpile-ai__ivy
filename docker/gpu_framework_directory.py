@@ -38,36 +38,32 @@ def directory_generator(req, base="/opt/fw/"):
 def install_pkg(path, pkg, base="fw/"):
     if pkg.split("==")[0] if "==" in pkg else pkg == "torch":
         subprocess.run(
-            f"yes |pip3 install --upgrade {pkg} --target"
-            f" {path} --default-timeout=100 --extra-index-url"
-            "  --no-cache-dir",
+            f"yes |pip3 install --no-cache-dir --upgrade {pkg} --target"
+            f" {path} --default-timeout=100 --extra-index-url",
             shell=True,
         )
         subprocess.run(
-            f"yes |pip3 install --upgrade torchvision --index-url"
+            f"yes |pip3 install --no-cache-dir --upgrade torchvision --index-url"
             f" https://download.pytorch.org/whl/cu121 --target"
-            f" {path} --default-timeout=100 --extra-index-url"
-            " --no-cache-dir",
+            f" {path} --default-timeout=100 --extra-index-url",
             shell=True,
         )
     elif pkg.split("==")[0] if "==" in pkg else pkg == "jax":
         subprocess.run(
-            f"yes |pip install --upgrade --target {path} 'jax[cuda12_pip]' -f"
-            " https://storage.googleapis.com/jax-releases/jax_cuda_releases.html  "
-            " --no-cache-dir",
+            f"yes |pip install --no-cache-dir --upgrade --target {path} 'jax[cuda12_pip]' -f"
+            " https://storage.googleapis.com/jax-releases/jax_cuda_releases.html  ",
             shell=True,
         )
     elif pkg.split("==")[0] if "==" in pkg else pkg == "paddle":
         subprocess.run(
-            "yes |pip install "
+            "yes |pip install --no-cache-dir "
             f" paddlepaddle-gpu=={get_latest_package_version('paddlepaddle')}"
-            f" --target {path} -f https://mirror.baidu.com/pypi/simple "
-            " --no-cache-dir",
+            f" --target {path} -f https://mirror.baidu.com/pypi/simple ",
             shell=True,
         )
     elif pkg.split("==")[0] if "==" in pkg else pkg == "tensorflow":
         subprocess.run(
-            f"yes |pip install tensorflow[and-cuda]==2.15.1 --target {path}",
+            f"yes |pip install tensorflow[and-cuda] --target {path}",
             shell=True,
         )
     else:

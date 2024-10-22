@@ -19,22 +19,19 @@ def directory_generator(req, base="/opt/fw/"):
 def install_pkg(path, pkg, base="fw/"):
     if pkg.split("==")[0] if "==" in pkg else pkg == "torch":
         subprocess.run(
-            f"pip3 install --upgrade {pkg} --target {path} --default-timeout=100"
-            " --extra-index-url https://download.pytorch.org/whl/cpu "
-            " --no-cache-dir",
+            f"pip3 install --no-cache-dir --upgrade {pkg} --target {path} --default-timeout=100"
+            " --extra-index-url https://download.pytorch.org/whl/cpu ",
             shell=True,
         )
     elif pkg.split("==")[0] == "jax":
         subprocess.run(
-            f"pip install --upgrade {pkg} --target  {path}  -f"
-            " https://storage.googleapis.com/jax-releases/jax_releases.html  "
-            " --no-cache-dir",
+            f"pip install --no-cache-dir --upgrade {pkg} --target  {path}  -f"
+            " https://storage.googleapis.com/jax-releases/jax_releases.html  ",
             shell=True,
         )
     else:
         subprocess.run(
-            f"pip3 install --upgrade {pkg} --target {path} --default-timeout=100  "
-            " --no-cache-dir",
+            f"pip3 install --no-cache-dir --upgrade {pkg} --target {path} --default-timeout=100  ",
             shell=True,
         )
 
@@ -55,22 +52,22 @@ def install_deps(pkgs, path_to_json, base="/opt/fw/"):
                     # check if version is there in this
                     if ver in keys[dep].keys():
                         subprocess.run(
-                            "pip3 install --upgrade"
+                            "pip3 install --no-cache-dir --upgrade"
                             f" {dep}=={keys[dep][ver]} --target"
-                            f" {path} --default-timeout=100 --upgrade  --no-cache-dir",
+                            f" {path} --default-timeout=100 --upgrade",
                             shell=True,
                         )
                     else:
                         subprocess.run(
-                            f"pip3 install  {dep} --target"
-                            f" {path} --default-timeout=100   --no-cache-dir",
+                            f"pip3 install --no-cache-dir {dep} --target"
+                            f" {path} --default-timeout=100",
                             shell=True,
                         )
                 else:
                     subprocess.run(
-                        "pip3 install "
+                        "pip3 install --no-cache-dir "
                         f" {keys} {f'-f https://data.pyg.org/whl/torch-{ver}%2Bcpu.html' if keys=='torch-scatter' else ''} --target"
-                        f" {path} --default-timeout=100   --no-cache-dir",
+                        f" {path} --default-timeout=100",
                         shell=True,
                     )
 
