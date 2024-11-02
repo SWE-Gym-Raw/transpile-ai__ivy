@@ -20,6 +20,7 @@ def source_to_source(
     object,
     source: str = "torch",
     target: str = "tensorflow",
+    inplace: bool = False,
     reuse_existing: bool = True,
     output_dir: str = "ivy_transpiled_outputs/",
 ):
@@ -35,6 +36,7 @@ def source_to_source(
         object: The object (class/function) to be translated.
         source (str, optional): The source framework. Defaults to 'torch'.
         target (str, optional): The target framework. Defaults to 'tensorflow'.
+        inplace (bool, optional): Whether modules should be lazily transpiled inplace. Defaults to False.
         reuse_existing (bool, optional): If True, the function will check if `object`
                                          already exists in the translated directory and reuse it.
                                          If False, it will re-translate `object`,
@@ -52,6 +54,7 @@ def source_to_source(
         object=object,
         source=source,
         target=target,
+        inplace=inplace,
         reuse_existing=reuse_existing,
         output_dir=output_dir,
     )
@@ -177,6 +180,7 @@ def transpile(
     object,
     source: str = "torch",
     target: str = "tensorflow",
+    inplace: bool = False,
     reuse_existing: bool = True,
     output_dir: str = "ivy_transpiled_outputs/",
 ):
@@ -192,6 +196,7 @@ def transpile(
         object: The object (class/function) to be translated.
         source (str, optional): The source framework. Defaults to 'torch'.
         target (str, optional): The target framework. Defaults to 'tensorflow'.
+        inplace (bool, optional): Whether modules should be lazily transpiled inplace. Defaults to False.
         reuse_existing (bool, optional): If True, the function will check if `object`
                                          already exists in the translated directory and reuse it.
                                          If False, it will re-translate `object`,
@@ -209,6 +214,7 @@ def transpile(
         object=object,
         source=source,
         target=target,
+        inplace=inplace,
         reuse_existing=reuse_existing,
         output_dir=output_dir,
     )
